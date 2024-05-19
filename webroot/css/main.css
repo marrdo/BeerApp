@@ -1,0 +1,309 @@
+/* General */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+body{
+    background-color: var(--bs-primary);
+    color: var(--bs-dark);
+}
+figure > picture > img,
+figure > img,
+figure > figcaption,
+figure > svg,
+figure > a > img,
+figure > video {
+    width: 100%;
+    display: block;
+}
+.h1,
+h1 {
+    font-size: 3rem; /* 54px */
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    font-weight: bold;
+}
+
+.h2,
+h2 {
+    font-size: 2.5rem; /* 45px */
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    font-weight: bold;
+}
+
+.h3,
+h3 {
+    font-size: 2rem; /* 36px */
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    font-weight: 600;
+}
+
+.h4,
+h4 {
+    font-size: 1.75rem; /* 32px */
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    font-weight: 600;
+}
+
+.h5,
+h5 {
+    font-size: 1.5rem; /* 27px */
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    font-weight: 600;
+}
+
+.h6,
+h6 {
+    font-size: 1.25rem; /* 22.5px */
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    font-weight: 600;
+}
+
+.p,
+p {
+    font-size: 1rem; /* 18px */
+    font-family: "Raleway", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    font-weight: 400;
+}
+#presentation{
+    margin-block: 2rem;
+    padding: 2rem 3rem;
+}
+section:not(#presentation) {
+    padding: 2rem 3rem;
+}
+
+/* header */
+.offcanvas-header {
+    gap: 10rem;
+}
+#logo {
+    width: 300px;
+}
+
+/* Footer */
+footer{
+    color: var(--bs-light);
+}
+
+footer button{
+    color: var(--bs-light);
+}
+
+#logo-footer{
+    height: 5rem;
+    width: 15rem;
+}
+
+/* Carouseles */
+
+/* Landing Page */
+
+#hero {
+    background-image: url(../img/landing_page/mural/FondoMural.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.item {
+    width: 15.625rem;
+    height: 15.625rem;
+    overflow: hidden;
+    border-radius: 3rem;
+    margin: 0 auto;
+}
+
+.item figure,
+.item picture,
+.item img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.item1 {
+    grid-column: 1/2;
+    grid-row: 1/3;
+    height: 31.25rem;
+}
+
+.item2 {
+    grid-column: 2/3;
+    grid-row: 1/2;
+}
+
+.item3 {
+    grid-column: 3/4;
+    grid-row: 4/5;
+}
+
+.item4 {
+    grid-column: 5/6;
+    grid-row: 2/3;
+}
+
+.item5 {
+    /*BeerOclock*/
+    grid-column: 5;
+    grid-row: 1;
+}
+
+.item6 {
+    /*Reloj */
+    grid-column: 1/2;
+    grid-row: 4/5;
+    border-radius: 50%;
+}
+
+.item7 {
+    /*Nobeboiagua*/
+    grid-column: 0;
+    grid-row: 0;
+}
+
+.item8 {
+    grid-column: 5/6;
+    grid-row: 3/5;
+    height: 31.25rem;
+}
+
+.item9 {
+    /*Lupuilo fusion*/
+    grid-column: 4/5;
+    grid-row: 4/5;
+}
+
+.item10 {
+    grid-column: 1/2;
+    grid-row: 3/4;
+}
+
+.item11 {
+    /*Adidas*/
+    grid-column: 3/4;
+    grid-row: 1/2;
+}
+
+.item12 {
+    grid-column: 4/5;
+    grid-row: 1/2;
+}
+
+.center-message {
+    grid-column: 2 / 5;
+    grid-row: 2 / 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 3rem;
+}
+.center-message h2 {
+    max-width: 25ch;
+}
+
+/* Carousel */
+.carousel-landing {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.carousel-landing figure {
+    width: 20rem;
+}
+.carousel-landing figure > img {
+    width: 80%;
+    border-radius: 1rem;
+    margin: 0 auto;
+}
+.carousel-landing figure > figcaption {
+   width: 100%;
+}
+
+#info-tienda figure img {
+    width: 100%;
+    border-radius: 1rem;
+    border: solid 0.4rem var(--bs-info);
+}
+
+/* Usuarios login */
+.rounded-t-5 {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+.img-login {
+    margin-bottom: 0;
+}
+
+.login .form-floating {
+    max-width: 30ch;
+}
+
+
+/* Estilos para extra pequeño (XS) - smartphones (menos de 576px) */
+@media (min-width: 576px) {
+    /* Estilos CSS aquí */
+}
+
+/* Estilos para pequeño (SM) - tablets (576px o más) */
+@media (min-width: 768px) {
+    /* Estilos CSS aquí */
+}
+
+/* Estilos para mediano (MD) - tablets y desktops (768px o más) */
+@media (min-width: 992px) {
+    /* Landing */
+
+    /* User Login */
+    .rounded-tr-lg-0 {
+        border-top-right-radius: 0;
+      }
+
+      .rounded-bl-lg-5 {
+        border-bottom-left-radius: 0.5rem;
+      }
+}
+
+/* Estilos para grande (LG) - desktops (992px o más) */
+@media (min-width: 1200px) {
+    /* /LandingPage */
+    #hero {
+        background-image: none;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+        column-gap: 0.5rem;
+        row-gap: 1rem;
+    }
+}
+
+/* Estilos para extra grande (XL) - desktops grandes (1200px o más) */
+@media (min-width: 1400px) {
+    /* Estilos CSS aquí */
+}

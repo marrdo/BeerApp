@@ -1,0 +1,104 @@
+public function initialize(array $config): void
+    {
+        parent::initialize($config);
+
+        $this->setTable('Users');
+        $this->setDisplayField('nombre');
+        $this->setPrimaryKey('id');
+
+        $this->hasMany('Pedidos', [
+            'foreignKey' => 'user_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+        $this->hasMany('Telefonos', [
+            'foreignKey' => 'user_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+        $this->hasMany('Tarjetas', [
+            'foreignKey' => 'user_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+        $this->hasMany('Resenas', [
+            'foreignKey' => 'user_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+        $this->belongsToMany('Roles', [
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'roles_id',
+            'joinTable' => 'Users_roles',
+            'className' => 'App\Model\Table\RolesTable'
+        ]);
+
+
+        parent::initialize($config);
+        $this->addBehavior('Password');
+    }
+
+    /**
+     * Default validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationDefault(Validator $validator): Validator
+    {
+        $validator
+            ->scalar('dni')
+            ->maxLength('dni', 20)
+            ->requirePresence('dni', 'create', __('El DNI es obligatorio'))
+            ->notEmptyString('dni', __('Por favor, proporciona el DNI'))
+            ->add('dni', 'unique', ['rule' => 'validateUnique', 'provider' => 'table', 'message' => __('Este DNI ya está en uso')]);
+
+        $validator
+            ->scalar('nombre')
+            ->maxLength('nombre', 100)
+            ->requirePresence('nombre', 'create', __('El nombre es obligatorio'))
+            ->notEmptyString('nombre', __('Por favor, proporciona el nombre'));
+
+        $validator
+            ->scalar('apellidos')
+            ->maxLength('apellidos', 100)
+            ->requirePresence('apellidos', 'create', __('Los apellidos son obligatorios'))
+            ->notEmptyString('apellidos', __('Por favor, proporciona los apellidos'));
+
+        $validator
+            ->scalar('email')
+            ->maxLength('email', 100)
+            ->requirePresence('email', 'create', __('El email electrónico es obligatorio'))
+            ->notEmptyString('email', __('Por favor, proporciona el email electrónico'))
+            ->add('email', 'validFormat', ['rule' => 'email', 'message' => __('Por favor, introduce una dirección de email electrónico válida')])
+            ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table', 'message' => __('Este email electrónico ya está en uso')]);
+
+        $validator
+            ->scalar('direccion')
+            ->maxLength('direccion', 255)
+            ->requirePresence('direccion', 'create', __('La dirección es obligatoria'))
+            ->notEmptyString('direccion', __('Por favor, proporciona la dirección'));
+
+        $validator
+            ->scalar('password')
+            ->maxLength('password', 255)
+            ->requirePresence('password', 'create', __('La contraseña es obligatoria'))
+            ->notEmptyString('password', __('Por favor, proporciona la contraseña'));
+
+        return $validator;
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules): RulesChecker
+    {
+        $rules->add($rules->isUnique(['dni'], ['message' => __('Este DNI ya está en uso')]), ['errorField' => 'dni']);
+        $rules->add($rules->isUnique(['email'],  ['message' => __('Este email electrónico ya está en uso')]), ['errorField' => 'email']);
+
+        return $rules;
+    }
