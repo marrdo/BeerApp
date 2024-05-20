@@ -62,6 +62,8 @@ return function (RouteBuilder $routes): void {
 
         $builder->connect('/about', ['plugin' => null, 'controller' => 'Pages', 'action' => 'about']);
 
+        
+
 
         // /*
         //  * ...and connect the rest of 'Pages' controller's URLs.
@@ -83,6 +85,8 @@ return function (RouteBuilder $routes): void {
         //  */
         $builder->fallbacks();
     });
+
+    $routes->post('/resenas/addAjax', ['controller' => 'Resenas', 'action' => 'addAjax']);
 
     /*
      * If you need a different set of middleware or none at all,

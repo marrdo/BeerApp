@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Policy;
 
 use App\Model\Entity\User;
 use Authorization\IdentityInterface;
+use Cake\ORM\TableRegistry;
 
 /**
  * User policy
@@ -37,12 +39,9 @@ class UserPolicy
      */
     public function canEdit(IdentityInterface $user, User $userEntity)
     {
-        if ($user->role === 'admin') {
-            return true;
-        }
 
         // Permitir que los usuarios editen sus propios datos
-        return $user->getIdentifier() === $userEntity->id;
+        return ($this->isAdmin($userEntity) || $this->isAutor($user,$userEntity)) ? true : false;
     }
 
     /**
@@ -54,12 +53,7 @@ class UserPolicy
      */
     public function canDelete(IdentityInterface $user, User $userEntity)
     {
-        if ($user->role === 'admin') {
-            return true;
-        }
-
-        // Permitir que los usuarios editen sus propios datos
-        return $user->getIdentifier() === $userEntity->id;
+        return ($this->isAdmin($userEntity) || $this->isAutor($user,$userEntity)) ? true : false;
     }
 
     /**
@@ -72,5 +66,27 @@ class UserPolicy
     public function canView(IdentityInterface $user, User $userEntity)
     {
         return true;
+    }
+
+    protected function isAdmin(User $currentUser)
+    {
+        
+        $user = TableRegistry::getTableLocator()->get('Users')->find()
+            ->where(['Users.id' => $currentUser->id])
+            ->contain(['Roles'])
+            ->first();
+        if (!empty($user->roles)) {
+            foreach ($user->roles as $role) {
+                if ($role->nombre === 'admin') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected function isAutor(IdentityInterface $user, User $userEntity)
+    {
+        return $user->id === $userEntity->id ? true : false;
     }
 }

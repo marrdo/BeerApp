@@ -7,6 +7,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use App\Model\Utilities\UtilitiesModel;
 
 /**
  * Resenas Model
@@ -51,6 +52,16 @@ class ResenasTable extends Table
         $this->belongsTo('Cervezas', [
             'foreignKey' => 'cerveza_id',
             'joinType' => 'INNER',
+        ]);
+
+        
+
+        $this->getEventManager()->on('Model.beforeSave', function ($event, $entity, $options) {
+            UtilitiesModel::generateReference($entity, $this->getAlias());
+        });
+        $this->addBehavior('Slug', [
+            'sourceField' => 'ref', // Campo fuente para generar el slug (en tu caso 'ref')
+            'targetField' => 'slug'   // Campo donde se almacenará el slug
         ]);
     }
 

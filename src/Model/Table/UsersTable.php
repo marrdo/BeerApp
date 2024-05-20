@@ -54,6 +54,13 @@ class UsersTable extends Table
             'joinTable' => 'Users_roles',
             'className' => 'App\Model\Table\RolesTable'
         ]);
+
+        $this->belongsToMany('Cervezas',[
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'cerveza_id',
+            'joinTable' => 'Resenas',
+            'className' => 'App\Model\Table\CervezasTable'
+        ]);
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\I18n\Number;
 
 /**
  * Cerveza Entity
@@ -54,4 +55,17 @@ class Cerveza extends Entity
         'sabor_dominante' => true,
         'resenas' => true,
     ];
+
+    public function __getPrecio()
+    {
+        return Number::currency($this->properties['precio']);
+    }
+    public function __getValoracion()
+    {
+        return Number::precision($this->properties['valoracion'], 2);
+    }
+    public function __getGradosAlcohol()
+    {
+        return Number::toPercentage($this->properties['grados_alcohol']);
+    }
 }

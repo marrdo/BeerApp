@@ -43,16 +43,10 @@ $userId = $isAuthenticated ? $user->id : null;
             <?php if ($isAuthenticated) : ?>
               <li class="list-group-item"><?= $this->Html->link('Ver perfil', ['plugin' => null, 'controller' => 'Users', 'action' => 'view', $userId], ['class' => 'text-dark']); ?></li>
               <li class="list-group-item"><?= $this->Html->link('Editar perfil', ['plugin' => null, 'controller' => 'Users', 'action' => 'edit', $userId], ['class' => 'text-dark']); ?></li>
-              <li class="list-group-item"><?= $this->Form->postLink(
-                                            'Eliminar cuenta',
-                                            ['plugin' => null, 'controller' => 'Users', 'action' => 'delete', $userId],
-                                            ['confirm' => '¿Estás seguro de que deseas eliminar tu cuenta?'],
-                                            ['class' => 'text-dark']
-                                          ); ?></li>
               <li class="list-group-item"><?= $isAuthenticated ? $this->Html->link('Cerrar sesión', ['plugin' => null, 'controller' => 'Users', 'action' => 'logout'], ['class' => 'nav-link active text-dark', 'aria-current' => 'page']) :
                                             $this->Html->link('Iniciar sesión', ['plugin' => null, 'controller' => 'Users', 'action' => 'login'], ['class' => 'nav-link active text-dark', 'aria-current' => 'page']); ?></li>
             <?php else : ?>
-              <li><?= $this->Html->link('Iniciar sesión', ['plugin' => null, 'controller' => 'Users', 'action' => 'login'], ['class' => 'text-dark', 'aria-current' => 'page']) ?></li>
+              <li><?= $this->Html->link('Iniciar sesión', ['plugin' => null, 'controller' => 'Users', 'action' => 'login'], ['class' => 'nav-link active text-dark', 'aria-current' => 'page']) ?></li>
             <?php endif; ?>
           </ul>
         </div>

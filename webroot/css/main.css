@@ -95,6 +95,11 @@ input {
     max-width: 30ch;
 }
 
+.btn{
+    font-family: "Poppins", Arial, Helvetica, sans-serif;
+    font-weight: 400;
+}
+
 /* header */
 .offcanvas-header {
     gap: 10rem;

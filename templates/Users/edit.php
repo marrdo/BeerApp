@@ -27,7 +27,7 @@
                         echo $this->Form->control('apellidos', ['required' => true, 'class' => 'form-control form-floating mb-3', 'type' => 'text', 'label' => ['text' => 'Apellidos', 'class' => 'floatingInput']]);
                         echo $this->Form->control('email', ['required' => true, 'class' => 'form-control form-floating mb-3', 'type' => 'email', 'label' => ['text' => 'Correo electrónico', 'class' => 'floatingInput']]);
                         echo $this->Form->control('direccion', ['required' => true, 'class' => 'form-control form-floating mb-3', 'type' => 'text', 'label' => ['text' => 'Dirección', 'class' => 'floatingInput']]);
-                        echo $this->Form->control('password', ['required' => true, 'class' => 'form-control form-floating mb-3', 'type' => 'password', 'label' => ['text' => 'Contraseña', 'class' => 'passwordInput']]);
+                        echo $this->Form->control('password', ['required' => true, 'class' => 'form-control form-floating mb-3', 'type' => 'password', 'label' => ['text' => 'Contraseña', 'class' => 'passwordInput'], 'default' => ' ']);
                         ?>
                     </fieldset>
                     <?= $this->Form->button(__('Actualizar'), ['class' => 'btn btn-secondary mb-3', 'confirm' => __('¿Realizar cambios para {0}?', ucfirst($user->nombre))]) ?>

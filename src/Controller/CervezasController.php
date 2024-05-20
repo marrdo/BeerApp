@@ -1,7 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
+
+use App\Model\Table\CervezasTable;
+use Cake\ORM\TableRegistry;
 
 /**
  * Cervezas Controller
@@ -19,9 +23,10 @@ class CervezasController extends AppController
     public function index()
     {
         $this->Authorization->skipAuthorization();
-        $cervezas = $this->paginate($this->Cervezas);
 
-        $this->set(compact('cervezas'));
+        $isAdmin = $this->isAdmin();
+        $cervezas = $this->paginate($this->Cervezas);
+        $this->set(compact('cervezas','isAdmin'));
     }
 
     /**
@@ -34,11 +39,25 @@ class CervezasController extends AppController
     public function view($id = null)
     {
         $this->Authorization->skipAuthorization();
+        $isAdmin = $this->isAdmin();
+        
         $cerveza = $this->Cervezas->get($id, [
             'contain' => ['Resenas'],
         ]);
+        $resena = $this->Cervezas->Resenas->newEmptyEntity();
 
-        $this->set(compact('cerveza'));
+        if ($this->request->is('post')) {
+            $resena = $this->Cervezas->Resenas->patchEntity($resena, $this->request->getData());
+            $resena->cerveza_id = $id; // Asignar la cerveza a la reseña
+            $resena->user_id = $this->getRequest()->getAttribute('authentication')->getIdentity()->id; 
+            if ($this->Cervezas->Resenas->save($resena)) {
+                $this->Flash->success(__('La reseña ha sido guardada.'));
+                return $this->redirect(['action' => 'view', $id]);
+            }
+            $this->Flash->error(__('No se pudo guardar la reseña. Por favor, intenta de nuevo.'));
+        }
+
+        $this->set(compact('cerveza', 'isAdmin', 'resena'));
     }
 
     /**
@@ -53,17 +72,22 @@ class CervezasController extends AppController
         $cerveza = $this->Cervezas->newEmptyEntity();
 
         $this->Authorization->authorize($cerveza);
-
+        $isAdmin = $this->isAdmin();
         if ($this->request->is('post')) {
             $cerveza = $this->Cervezas->patchEntity($cerveza, $this->request->getData());
             if ($this->Cervezas->save($cerveza)) {
-                $this->Flash->success(__('The cerveza has been saved.'));
+                $this->Flash->success(__('Se ha añadido una cerveza.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The cerveza could not be saved. Please, try again.'));
+            $this->Flash->error(__('No se ha podido añadir la cerveza, prueba de nuevo.'));
         }
-        $this->set(compact('cerveza'));
+        $colores =array_combine( array_map('ucfirst', CervezasTable::COLORES),array_map('ucfirst', CervezasTable::COLORES)) ;
+        $regionesOrigen = array_map('ucfirst', CervezasTable::REGIONES_ORIGEN);
+        $familiasEstilos = array_combine(array_map('ucfirst', CervezasTable::FAMILIAS_ESTILOS),array_map('ucfirst', CervezasTable::FAMILIAS_ESTILOS));
+        $sabores = array_map('ucfirst', CervezasTable::SABORES);
+        $tipos =array_combine(array_map('ucfirst', CervezasTable::TIPOS), array_map('ucfirst', CervezasTable::TIPOS));
+        $this->set(compact('cerveza', 'tipos', 'colores', 'regionesOrigen', 'familiasEstilos', 'sabores', 'isAdmin'));
     }
 
     /**
@@ -77,22 +101,27 @@ class CervezasController extends AppController
     {
         $cerveza = $this->Cervezas->get($id, [
             'contain' => [
-                'Resena'
+                'Resenas'
             ],
         ]);
 
         $this->Authorization->authorize($cerveza);
-
+        $isAdmin = $this->isAdmin();
         if ($this->request->is(['patch', 'post', 'put'])) {
             $cerveza = $this->Cervezas->patchEntity($cerveza, $this->request->getData());
             if ($this->Cervezas->save($cerveza)) {
-                $this->Flash->success(__('The cerveza has been saved.'));
+                $this->Flash->success(__('{0}, se ha actualizado.', $cerveza->nombre));
 
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The cerveza could not be saved. Please, try again.'));
         }
-        $this->set(compact('cerveza'));
+        $colores =array_combine( array_map('ucfirst', CervezasTable::COLORES),array_map('ucfirst', CervezasTable::COLORES)) ;
+        $regionesOrigen = array_map('ucfirst', CervezasTable::REGIONES_ORIGEN);
+        $familiasEstilos = array_combine(array_map('ucfirst', CervezasTable::FAMILIAS_ESTILOS),array_map('ucfirst', CervezasTable::FAMILIAS_ESTILOS));
+        $sabores = array_map('ucfirst', CervezasTable::SABORES);
+        $tipos =array_combine(array_map('ucfirst', CervezasTable::TIPOS), array_map('ucfirst', CervezasTable::TIPOS));
+        $this->set(compact('cerveza', 'tipos', 'colores', 'regionesOrigen', 'familiasEstilos', 'sabores','isAdmin'));
     }
 
     /**
@@ -105,11 +134,11 @@ class CervezasController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        
+
         $cerveza = $this->Cervezas->get($id);
 
         $this->Authorization->authorize($cerveza);
-        
+
         if ($this->Cervezas->delete($cerveza)) {
             $this->Flash->success(__('The cerveza has been deleted.'));
         } else {
@@ -117,5 +146,22 @@ class CervezasController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    protected function isAdmin(){
+        $currentUser = $this->getRequest()->getAttribute('authentication')->getIdentity();
+        $user = TableRegistry::getTableLocator()->get('Users')->find()
+        ->where(['Users.id' => $currentUser->id])
+        ->contain(['Roles'])
+        ->first();
+        if (!empty($user->roles)) {
+            foreach ($user->roles as $role) {
+                if ($role->nombre === 'admin') {
+                    return true;
+                    
+                }
+            }
+        }
+        return false;
     }
 }

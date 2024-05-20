@@ -6,6 +6,7 @@ namespace App\Policy;
 
 use App\Model\Entity\Cerveza;
 use Authorization\IdentityInterface;
+use Cake\ORM\TableRegistry;
 
 /**
  * Cerveza policy
@@ -21,6 +22,7 @@ class CervezaPolicy
      */
     public function canAdd(IdentityInterface $user, Cerveza $cerveza)
     {
+        
         return $this->isAdmin($user);
     }
 
@@ -60,11 +62,17 @@ class CervezaPolicy
         return true;
     }
 
+    public function canIndex(IdentityInterface $user, Cerveza $cerveza)
+    {
+        return true;
+    }
+
     protected function isAdmin(IdentityInterface $user)
     {
-        foreach ($user->roles as $rol) {
-            if ($rol === 'admin') return true;
-        }
+        $rol= TableRegistry::getTableLocator()->get('Users')->find()->where(['id' => $user->id])->contain(['Roles'])->first()->roles[0]->nombre;
+        
+        if ($rol === 'admin') return true;
+        
         return false;
     }
 }

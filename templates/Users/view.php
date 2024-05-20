@@ -15,6 +15,7 @@
                     <?= $this->Form->postLink(__('Eliminar cuenta'), ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'side-nav-item text-dark']) ?>
                     <?= $this->Html->link(__('Ver usuarios'), ['action' => 'index'], ['class' => 'side-nav-item text-dark']) ?>
                     <?= $isAdmin ?  $this->Html->link(__('Añadir usuario'), ['action' => 'add'], ['class' => 'side-nav-item text-dark']) : '' ?>
+                    <?= $isAdmin ?  $this->Html->link(__('Añadir Cerveza'), ['plugin' => null, 'controller' => 'Cervezas','action' => 'add'], ['class' => 'side-nav-item text-dark']) : '' ?>
                 </div>
             </aside>
             <div class="col col-sm-8">

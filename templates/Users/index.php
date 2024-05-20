@@ -30,8 +30,8 @@
                             <tr>
                                 <?= $isAdmin ? '<td>' . h($user->id) . '</td>' : '' ?>
                                 <?= $isAdmin ? '<td>' . h($user->dni) . '</td>' : '' ?>
-                                <td><?= h($user->nombre) ?></td>
-                                <td><?= h($user->apellidos) ?></td>
+                                <td><?= ucfirst(h($user->nombre)) ?></td>
+                                <td><?= ucfirst(h($user->apellidos)) ?></td>
                                 <td><?= h($user->email) ?></td>
                                 <?= $isAdmin ? '<td>' . h($user->direccion) . '</td>' : '' ?>
                                 <td class="actions">
