@@ -1,54 +1,62 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\User> $users
+ * @var bool $isAdmin
  */
 ?>
-<div class="users index content">
-    <?= $this->Html->link(__('New User'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Users') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('dni') ?></th>
-                    <th><?= $this->Paginator->sort('nombre') ?></th>
-                    <th><?= $this->Paginator->sort('apellidos') ?></th>
-                    <th><?= $this->Paginator->sort('email') ?></th>
-                    <th><?= $this->Paginator->sort('direccion') ?></th>
-                    <th><?= $this->Paginator->sort('Password'); ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($users as $user): ?>
-                <tr>
-                    <td><?= h($user->id) ?></td>
-                    <td><?= h($user->dni) ?></td>
-                    <td><?= h($user->nombre) ?></td>
-                    <td><?= h($user->apellidos) ?></td>
-                    <td><?= h($user->email) ?></td>
-                    <td><?= h($user->direccion) ?></td>
-                    <td><?= h($user->password); ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $user->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $user->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
-    </div>
-</div>
+<main class="index-user">
+    <section class="container">
+        <div class="users index content">
+            <?= $isAdmin ? $this->Html->link(__('New User'), ['action' => 'add'], ['class' => 'button float-right']) : '' ?>
+            <h3><?= __('Usuarios') ?></h3>
+            <div class="table-responsive">
+                <table class="table table-primary table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <?= $isAdmin ? '<th scope="col"><span class="text-dark">' . $this->Paginator->sort('id') . '</span></th>' : '' ?>
+                            <?= $isAdmin ? '<th scope="col"><span class="text-dark">' . $this->Paginator->sort('dni') . '</span></th>' : '' ?>
+                            <th scope="col"><span class="text-dark"><?= $this->Paginator->sort('nombre') ?></span></th>
+                            <th scope="col"><span class="text-dark"><?= $this->Paginator->sort('apellidos') ?></span></th>
+                            <th scope="col"><span class="text-dark"><?= $this->Paginator->sort('email') ?></span></th>
+                            <?= $isAdmin ? '<th scope="col"><span class="text-dark">' . $this->Paginator->sort('direccion') . '</span></th>' : '' ?>
+
+                            <th class="actions"><?= __('Actions') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <?php foreach ($users as $user) : ?>
+                            <tr>
+                                <?= $isAdmin ? '<td>' . h($user->id) . '</td>' : '' ?>
+                                <?= $isAdmin ? '<td>' . h($user->dni) . '</td>' : '' ?>
+                                <td><?= h($user->nombre) ?></td>
+                                <td><?= h($user->apellidos) ?></td>
+                                <td><?= h($user->email) ?></td>
+                                <?= $isAdmin ? '<td>' . h($user->direccion) . '</td>' : '' ?>
+                                <td class="actions">
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                                        <?= $this->Html->link(__('Ver'), ['action' => 'view', $user->id], ['class' => 'btn btn-info my-2 mx-1 rounded-pill', 'type' => 'button']) ?>
+                                        <?= $isAdmin ? $this->Html->link(__('Editar'), ['action' => 'edit', $user->id], ['class' => 'btn btn-info my-2 mx-1 rounded-pill', 'type' => 'button']) : '' ?>
+                                        <?= $isAdmin ? $this->Form->postLink(__('Borrar'), ['action' => 'delete', $user->id], ['confirm' => __('¿Seguro que deseas borrar a # {0}?', $user->id), 'class' => 'btn btn-danger my-2 mx-1 rounded-pill', 'type' => 'button']) : '' ?>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginator">
+                <ul class="pagination">
+                    <?= $this->Paginator->first('<< ' . __('Primero')) ?>
+                    <?= $this->Paginator->prev('< ' . __('Anterior')) ?>
+                    <?= $this->Paginator->numbers() ?>
+                    <?= $this->Paginator->next(__('Siguiente') . ' >') ?>
+                    <?= $this->Paginator->last(__('Última') . ' >>') ?>
+                </ul>
+                <p><?= $this->Paginator->counter(__('Pagina {{page}} de {{pages}}, mostrando {{current}} registro/s de {{count}} en total')) ?></p>
+            </div>
+        </div>
+    </section>
+</main>

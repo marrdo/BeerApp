@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -14,6 +15,7 @@ declare(strict_types=1);
  * @since     0.2.9
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App\Controller;
 
 use Cake\Core\Configure;
@@ -37,7 +39,13 @@ class PagesController extends AppController
     {
         // Con el filtro este, hacemos que el authenticator no afecte a login y a add para que s epuedan agregar usuarios y acceder al login
         parent::beforeFilter($event);
-        $this->Authentication->addUnauthenticatedActions(['*']);
+        $this->Authentication->addUnauthenticatedActions([
+            'display',
+            'features',
+            'faqs',
+            'about'
+        ]);
+        
     }
     /**
      * Displays a view
@@ -53,6 +61,7 @@ class PagesController extends AppController
      */
     public function display(string ...$path): ?Response
     {
+        $this->Authorization->skipAuthorization();
         if (!$path) {
             return $this->redirect('/');
         }
@@ -82,6 +91,7 @@ class PagesController extends AppController
 
     public function features()
     {
+        $this->Authorization->skipAuthorization();
         $title = 'Características';
         $this->viewBuilder()->setTemplate('features');
         $this->set(compact('title'));
@@ -89,6 +99,7 @@ class PagesController extends AppController
 
     public function faqs()
     {
+        $this->Authorization->skipAuthorization();
         $title = 'Preguntas frecuentes';
         $this->viewBuilder()->setTemplate('faqs');
         $this->set(compact('title'));
@@ -96,6 +107,7 @@ class PagesController extends AppController
 
     public function about()
     {
+        $this->Authorization->skipAuthorization();
         $title = 'Sobre nosotros';
         $this->viewBuilder()->setTemplate('about');
         $this->set(compact('title'));

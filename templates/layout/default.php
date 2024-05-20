@@ -30,13 +30,14 @@ $title = isset($title) ? $title : ucfirst($this->template);
 
     <?= $this->Html->css([
         'fonts.css',
-        'bootstrap.min.css',
         'bootstrap.rtl.min.css',
         'bootstrap-grid.min.css',
         'bootstrap-grid.rtl.min.css',
         'bootstrap-reboot.rtl.min.css',
         'bootstrap-utilities.css',
+        'bootstrap.css',
         'utilidades.css',
+        'all.min.css',
         'slick.css',
         'slick-theme.css',
         'main.css'
@@ -59,9 +60,9 @@ $title = isset($title) ? $title : ucfirst($this->template);
 
     <?= $this->Element('footer'); ?>
     <?= $this->Html->script([
+        'all.min.js',
         'bootstrap.min.js',
         'bootstrap.bundle.min.js',
-        'bootstrap.esm.min.js',
     ]); ?>
 </body>
 

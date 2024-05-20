@@ -91,10 +91,3 @@
         mobileFirst: true,
     });
 </script>
-<script>
-    document.addEventListener('click', function() {
-        var ancho = window.innerWidth;
-        var alto = window.innerHeight;
-        console.log('El tamaño de la pantalla es: ' + ancho + 'x' + alto + ' píxeles');
-    });
-</script>

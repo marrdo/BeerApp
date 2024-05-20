@@ -55,4 +55,11 @@ class User extends Entity
         }
         
     }
+
+    protected function _getFullName()
+    {
+        return $this->nombre. '  ' . $this->apellidos;
+    }
+
+    
 }

@@ -21,9 +21,25 @@ class UsersController extends AppController
      */
     public function index()
     {
+        $currentUser = $this->getRequest()->getAttribute('authentication')->getIdentity();
+        $user = $this->Users->find()
+        ->where(['Users.id' => $currentUser->id])
+        ->contain(['Roles'])
+        ->first();
+        
+        $isAdmin = false;
+        if (!empty($user->roles)) {
+            foreach ($user->roles as $role) {
+                if ($role->nombre === 'admin') {
+                    $isAdmin = true;
+                    break;
+                }
+            }
+        }
+        $this->Authorization->skipAuthorization();
         $users = $this->paginate($this->Users);
 
-        $this->set(compact('users'));
+        $this->set(compact('users', 'isAdmin'));
     }
 
     /**
@@ -35,11 +51,24 @@ class UsersController extends AppController
      */
     public function view($id = null)
     {
+        $this->Authorization->skipAuthorization();
         $user = $this->Users->get($id, [
-            'contain' => ['Resenas'],
+            'contain' => [
+                'Resenas',
+                'Roles'
+            ],
         ]);
+        $isAdmin = false;
+        if (!empty($user->roles)) {
+            foreach ($user->roles as $role) {
+                if ($role->nombre === 'admin') {
+                    $isAdmin = true;
+                    break;
+                }
+            }
+        }
 
-        $this->set(compact('user'));
+        $this->set(compact('user', 'isAdmin'));
     }
 
     /**
@@ -49,15 +78,23 @@ class UsersController extends AppController
      */
     public function add()
     {
+        $this->Authorization->skipAuthorization();
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+                $usersRolesTable = $this->getTableLocator()->get('UsersRoles');
+                $userRole = $usersRolesTable->newEmptyEntity();
+                $userRole->user_id = $user->id;
+                $userRole->roles_id = '40d46abf-15ce-11ef-b038-08002796b452';
+
+                $usersRolesTable->save($userRole);
+
+                $this->Flash->success(__('Se ha guardado el usuario.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            $this->Flash->error(__('El usuario no ha sido guardado. Pruebe de nuevo.'));
         }
         $this->set(compact('user'));
     }
@@ -72,16 +109,20 @@ class UsersController extends AppController
     public function edit($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => [],
+            'contain' => [
+                'Resenas',
+                'Roles'
+            ],
         ]);
+        $this->Authorization->authorize($user, 'edit');
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+                $this->Flash->success(__('Se actualizaron los datos del usuario.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            $this->Flash->error(__('Los datos del usuario no han podido ser guardado. Inténtelo de nuevo.'));
         }
         $this->set(compact('user'));
     }
@@ -98,9 +139,9 @@ class UsersController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
+            $this->Flash->success(__('El usuario ha sido eliminado.'));
         } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            $this->Flash->error(__('El usuario no ha podido ser eliminado. Inténtelo de nuevo.'));
         }
 
         return $this->redirect(['action' => 'index']);
@@ -108,6 +149,7 @@ class UsersController extends AppController
 
     public function login()
     {
+        $this->Authorization->skipAuthorization();
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
         if ($result->isValid()) {
@@ -126,6 +168,7 @@ class UsersController extends AppController
 
     public function logout()
     {
+        $this->Authorization->skipAuthorization();
         $result = $this->Authentication->getResult();
         // regardless of POST or GET, redirect if user is logged in
         if ($result && $result->isValid()) {
