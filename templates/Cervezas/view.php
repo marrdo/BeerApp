@@ -17,7 +17,7 @@
                     <?= $this->Html->link(__('Añadir cervezas'), ['action' => 'add'], ['class' => 'side-nav-item text-dark']) ?>
                 </div>
             </aside>
-            <div class="col col-sm-8">
+            <div class="col-12 col-sm-8">
                 <div class="cervezas view content">
                     <h3><?= ucfirst(h($cerveza->nombre)) ?></h3>
                     <div class="table-responsive">
@@ -89,38 +89,38 @@
                 </div>
             </div>
         </div>
-        <div >
+        <div>
             <div>
                 <div class="row">
-                    <h4 class="col-12"><?= __('Añadir Reseña') ?></h4>
-
-                    <div class="col-12 col-sm-4 form-floating">
-                        <input type="number" class="form-control" id="valoracion" placeholder="name@example.com" value="test@example.com">
-                        <label for="valoracion" style="max-width: 25ch;">Valoración</label>
-
+                    <?= $this->Html->link(__('Crear reseña'), ['controller' => 'Resenas', 'action' => 'add', $cerveza->id], ['class' => 'mt-5 col-3 btn btn-secondary']); ?>
+                    <h4 class="mt-5"><?= __('Reseñas') ?></h4>
+                    <div id="resenas" class="table-responsive">
+                        <table class="table table-primary table-striped table-hover">
+                            <thead class="table-dark">
+                                <th scope="col"><span class="text-dark"><?= $this->Paginator->sort('Nombre usuario') ?></span></th>
+                                <th scope="col"><span class="text-dark"><?= $this->Paginator->sort('Valoracion') ?></span></th>
+                                <th scope="col"><span class="text-dark"><?= $this->Paginator->sort('Comentarios') ?></span></th>
+                                <th scope="col"><span class="text-primary"><?= __('Acciones') ?></span></th>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($resenas as $resena) { ?>
+                                    <tr>
+                                        <td><?= $resena->user->nombre; ?></td>
+                                        <td><?= $resena->calificacion; ?></td>
+                                        <td><?= $resena->comentario; ?></td>
+                                        <td class="action">
+                                            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                                                <?= $this->Html->link(__('Ver usuario'), ['controller' => 'Users', 'action' => 'view', $user->id], ['class' => 'btn btn-info my-2 mx-1 rounded-pill', 'type' => 'button']) ?>
+                                                <?= $isAdmin ? $this->Html->link(__('Editar'), ['action' => 'edit', $resena->id], ['class' => 'btn btn-info my-2 mx-1 rounded-pill', 'type' => 'button']) : '' ?>
+                                                <?= $isAdmin ? $this->Form->postLink(__('Borrar'), ['action' => 'delete', $resena->id], ['confirm' => __('¿Seguro que deseas borrar a # {0}?', $resena->slug), 'class' => 'btn btn-danger my-2 mx-1 rounded-pill', 'type' => 'button']) : '' ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div class="col-12 col-sm-8 form-floating">
-                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-                        <label for="floatingTextarea">Comments</label>
-                    </div>
-                    <?= $this->Form->button('Enviar reseña', ['class' => 'btn btn-secondary', 'id' => 'Eresena']); ?>
                 </div>
             </div>
-            <h4><?= __('Reseñas') ?></h4>
-            <div id="resenas">
-
-            </div>
-        </div>
-        </div>
     </section>
 </main>
-
-<script>
-document.querySelector('#Eresena').addEventListener('click', ()=>{
-    let val = document.querySelector('#valoracion').value;
-    let coment = document.querySelector('#floatingTextarea').value;
-
-    fetch
-})
-</script>

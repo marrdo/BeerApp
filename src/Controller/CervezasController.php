@@ -38,26 +38,21 @@ class CervezasController extends AppController
      */
     public function view($id = null)
     {
+        
         $this->Authorization->skipAuthorization();
         $isAdmin = $this->isAdmin();
         
         $cerveza = $this->Cervezas->get($id, [
             'contain' => ['Resenas'],
         ]);
-        $resena = $this->Cervezas->Resenas->newEmptyEntity();
-
-        if ($this->request->is('post')) {
-            $resena = $this->Cervezas->Resenas->patchEntity($resena, $this->request->getData());
-            $resena->cerveza_id = $id; // Asignar la cerveza a la reseña
-            $resena->user_id = $this->getRequest()->getAttribute('authentication')->getIdentity()->id; 
-            if ($this->Cervezas->Resenas->save($resena)) {
-                $this->Flash->success(__('La reseña ha sido guardada.'));
-                return $this->redirect(['action' => 'view', $id]);
-            }
-            $this->Flash->error(__('No se pudo guardar la reseña. Por favor, intenta de nuevo.'));
-        }
-
-        $this->set(compact('cerveza', 'isAdmin', 'resena'));
+        $currentUser = $this->getRequest()->getAttribute('authentication')->getIdentity();
+        $user = TableRegistry::getTableLocator()->get('Users')->find()
+        ->where(['Users.id' => $currentUser->id])
+        ->contain(['Roles'])
+        ->first();
+        
+        $resenas = $this->Cervezas->Resenas->find()->contain(['Users'])->where(['cerveza_id' => $cerveza->id]);
+        $this->set(compact('cerveza', 'isAdmin', 'resenas', 'user'));
     }
 
     /**

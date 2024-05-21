@@ -86,7 +86,7 @@ return function (RouteBuilder $routes): void {
         $builder->fallbacks();
     });
 
-    $routes->post('/resenas/addAjax', ['controller' => 'Resenas', 'action' => 'addAjax']);
+
 
     /*
      * If you need a different set of middleware or none at all,

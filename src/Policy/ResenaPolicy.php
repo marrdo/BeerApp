@@ -5,6 +5,7 @@ namespace App\Policy;
 
 use App\Model\Entity\Resena;
 use Authorization\IdentityInterface;
+use Cake\ORM\TableRegistry;
 
 /**
  * Resena policy
@@ -32,7 +33,7 @@ class ResenaPolicy
      */
     public function canEdit(IdentityInterface $user, Resena $resena)
     {
-        return $this->isAuthor($user, $resena);
+        return ($this->isAuthor($user, $resena) || $this->isAdmin($user));
     }
 
     /**
@@ -64,10 +65,18 @@ class ResenaPolicy
         return $resena->user_id === $user->getIdentifier();
     }
 
-    protected function isAdmin(IdentityInterface $user)
+    protected function isAdmin(IdentityInterface $currentUser)
     {
-        foreach ($user->roles as $rol) {
-            if ($rol === 'admin') return true;
+        $user = TableRegistry::getTableLocator()->get('Users')->find()
+            ->where(['Users.id' => $currentUser->id])
+            ->contain(['Roles'])
+            ->first();
+        if (!empty($user->roles)) {
+            foreach ($user->roles as $role) {
+                if ($role->nombre === 'admin') {
+                    return true;
+                }
+            }
         }
         return false;
     }

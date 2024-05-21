@@ -8,6 +8,9 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use App\Model\Utilities\UtilitiesModel;
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
 
 /**
  * Resenas Model
@@ -58,11 +61,16 @@ class ResenasTable extends Table
 
         $this->getEventManager()->on('Model.beforeSave', function ($event, $entity, $options) {
             UtilitiesModel::generateReference($entity, $this->getAlias());
+            // dd($entity);
         });
         $this->addBehavior('Slug', [
             'sourceField' => 'ref', // Campo fuente para generar el slug (en tu caso 'ref')
             'targetField' => 'slug'   // Campo donde se almacenará el slug
         ]);
+    }
+
+    public function afterSave(EventInterface $event, EntityInterface $entity, ArrayObject $options){
+        
     }
 
     /**
@@ -76,15 +84,15 @@ class ResenasTable extends Table
         $validator
             ->scalar('ref')
             ->maxLength('ref', 20)
-            ->requirePresence('ref', 'create')
-            ->notEmptyString('ref')
+            // ->requirePresence('ref', 'create')
+            // ->notEmptyString('ref')
             ->add('ref', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->scalar('slug')
             ->maxLength('slug', 255)
-            ->requirePresence('slug', 'create')
-            ->notEmptyString('slug')
+            // ->requirePresence('slug', 'create')
+            // ->notEmptyString('slug')
             ->add('slug', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator

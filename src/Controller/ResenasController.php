@@ -1,7 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
+
+use Cake\ORM\TableRegistry;
 
 /**
  * Resenas Controller
@@ -18,12 +21,14 @@ class ResenasController extends AppController
      */
     public function index()
     {
+        $this->Authorization->skipAuthorization();
+        return $this->redirect(['controller'=>'Cervezas','action' => 'index']);
         $this->paginate = [
             'contain' => ['Users', 'Cervezas'],
         ];
         $resenas = $this->paginate($this->Resenas);
 
-        $this->Authorization->skipAuthorization();
+        
 
         $this->set(compact('resenas'));
     }
@@ -37,11 +42,13 @@ class ResenasController extends AppController
      */
     public function view($id = null)
     {
+        $this->Authorization->skipAuthorization();
         $resena = $this->Resenas->get($id, [
             'contain' => ['Users', 'Cervezas'],
         ]);
-
-        $this->Authorization->skipAuthorization();
+        $cerveza = $this->Resenas->Cervezas->find()->where(['id' => $resena->cerveza_id])->first();
+        return $this->redirect(['controller'=>'Cervezas','action' => 'view', $cerveza->id]);
+        
 
         $this->set(compact('resena'));
     }
@@ -51,24 +58,25 @@ class ResenasController extends AppController
      *
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add($related_id)
     {
         $resena = $this->Resenas->newEmptyEntity();
-
         $this->Authorization->authorize($resena, 'add');
-
+        $isAdmin = $this->isAdmin();
         if ($this->request->is('post')) {
+
             $resena = $this->Resenas->patchEntity($resena, $this->request->getData());
             if ($this->Resenas->save($resena)) {
                 $this->Flash->success(__('The resena has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['controller' => 'Cervezas', 'action' => 'view', $related_id]);
             }
             $this->Flash->error(__('The resena could not be saved. Please, try again.'));
         }
-        $users = $this->Resenas->Users->find('list', ['limit' => 200])->all();
-        $cervezas = $this->Resenas->Cervezas->find('list', ['limit' => 200])->all();
-        $this->set(compact('resena', 'users', 'cervezas'));
+        $resenas = $this->Resenas->find()->contain(['Users'])->where(['cerveza_id' => $related_id]);
+        $user = $this->getRequest()->getAttribute('authentication')->getIdentity();
+        $cerveza = $this->Resenas->Cervezas->find()->where(['id' => $related_id])->first();
+        $this->set(compact('resena', 'user', 'cerveza', 'isAdmin', 'resenas'));
     }
 
     /**
@@ -85,19 +93,20 @@ class ResenasController extends AppController
         ]);
 
         $this->Authorization->authorize($resena, 'add');
-        
+        $isAdmin = $this->isAdmin();
+        $cerveza = $this->Resenas->Cervezas->find()->where(['id' => $resena->cerveza_id])->first();
         if ($this->request->is(['patch', 'post', 'put'])) {
             $resena = $this->Resenas->patchEntity($resena, $this->request->getData());
             if ($this->Resenas->save($resena)) {
                 $this->Flash->success(__('The resena has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['controller'=>'Cervezas','action' => 'view', $cerveza->id]);
             }
             $this->Flash->error(__('The resena could not be saved. Please, try again.'));
         }
-        $users = $this->Resenas->Users->find('list', ['limit' => 200])->all();
-        $cervezas = $this->Resenas->Cervezas->find('list', ['limit' => 200])->all();
-        $this->set(compact('resena', 'users', 'cervezas'));
+        $resenas = $this->Resenas->find()->contain(['Users'])->where(['cerveza_id' => $resena->cerveza_id]);
+        $user = $this->getRequest()->getAttribute('authentication')->getIdentity();
+        $this->set(compact('resena', 'user', 'cerveza', 'isAdmin', 'resenas'));
     }
 
     /**
@@ -121,5 +130,22 @@ class ResenasController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    protected function isAdmin()
+    {
+        $currentUser = $this->getRequest()->getAttribute('authentication')->getIdentity();
+        $user = TableRegistry::getTableLocator()->get('Users')->find()
+            ->where(['Users.id' => $currentUser->id])
+            ->contain(['Roles'])
+            ->first();
+        if (!empty($user->roles)) {
+            foreach ($user->roles as $role) {
+                if ($role->nombre === 'admin') {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

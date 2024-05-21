@@ -95,6 +95,11 @@ input {
     max-width: 30ch;
 }
 
+.form-floating >label {
+    max-width: 20ch;
+    left: 1rem;
+}
+
 .btn{
     font-family: "Poppins", Arial, Helvetica, sans-serif;
     font-weight: 400;
@@ -274,6 +279,10 @@ footer button {
 
 .login .form-floating {
     max-width: 30ch;
+}
+.textarea{
+    display: flex;
+  flex-direction: column;
 }
 
 /* Estilos para extra pequeño (XS) - smartphones (menos de 576px) */
