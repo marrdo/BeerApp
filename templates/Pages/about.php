@@ -16,6 +16,7 @@
         <p>Nuestro objetivo es crear una comunidad de amantes de la cerveza donde puedan compartir sus conocimientos, descubrir nuevas cervezas y disfrutar de esta apasionante bebida juntos. Queremos que nuestra aplicación sea el lugar de referencia para todos aquellos que quieran explorar el mundo de la cerveza, desde los principiantes hasta los expertos.</p>
     
         <h2 class="mt-4">Únete a nuestra comunidad</h2>
-        <p>¡Únete a nuestra comunidad de amantes de la cerveza! <?php echo $this->Html->link('Regístrate ahora', ['controller' => 'Usuarios', 'action' => 'add', 'plugin' => null, '?' => []], ['class' => 'btn btn-secondary']); ?></p>
+        <p>¡Únete a nuestra comunidad de amantes de la cerveza! 
+            <?php echo $this->Html->link('Regístrate ahora', ['controller' => 'Users', 'action' => 'add', 'plugin' => null], ['class' => 'btn btn-secondary']); ?></p>
     </div>
 </main>

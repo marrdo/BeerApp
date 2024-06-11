@@ -30,7 +30,7 @@
                 <div class="card-body">
                     <h5 class="card-title mb-3">¿Listo para comenzar?</h5>
                     <p class="card-text">¡Únete a nuestra comunidad de amantes de la cerveza y empieza a disfrutar de todas estas increíbles funcionalidades!</p>
-                    <?php echo $this->Html->link('Regístrate ahora', ['controller' => 'Users', 'action' => 'add', 'plugin' => null, '?' => []], ['class' => 'btn btn-primary']); ?>
+                    <?php echo $this->Html->link('Regístrate ahora', ['controller' => 'Users', 'action' => 'add', 'plugin' => null], ['class' => 'btn btn-primary']); ?>
                 </div>
             </div>
         </div>

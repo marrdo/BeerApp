@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 20-05-2024 a las 23:04:04
+-- Tiempo de generación: 22-05-2024 a las 18:30:42
 -- Versión del servidor: 8.0.36-0ubuntu0.22.04.1
 -- Versión de PHP: 8.2.18
 
@@ -43,7 +43,7 @@ CREATE TABLE `Cervezas` (
   `origen` varchar(50) DEFAULT NULL,
   `familia_estilos` varchar(50) DEFAULT NULL,
   `sabor_dominante` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `Cervezas`
@@ -92,7 +92,17 @@ CREATE TABLE `Resenas` (
   `user_id` char(36) NOT NULL,
   `cerveza_id` char(36) NOT NULL,
   `comentario` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `Resenas`
+--
+
+INSERT INTO `Resenas` (`id`, `ref`, `slug`, `calificacion`, `user_id`, `cerveza_id`, `comentario`) VALUES
+('265fa81f-810e-47cd-a56d-3b804939c921', 'RES-0004', 'RES-0004', 5.00, 'ceec536b-8372-4d98-afc7-82cd93e40bd4', '83abcbda-dc8b-42ba-a7e9-da8f006f499d', 'Ta buena'),
+('94d2ff06-5de3-4d14-8dc1-3df71308f886', 'RES-0002', 'RES-0002', 1.00, 'ceec536b-8372-4d98-afc7-82cd93e40bd4', '27243a6d-68fc-489b-9a3e-3170230b3310', 'wer'),
+('afe71e50-afcb-49f6-bc94-50366cd3b403', 'RES-0003', 'RES-0003', 1.00, 'ceec536b-8372-4d98-afc7-82cd93e40bd4', '27243a6d-68fc-489b-9a3e-3170230b3310', 'wer'),
+('bef7afa0-17af-11ef-9124-08002796b452', 'RES-0001', 'RES-0001', 5.00, '7d999e0b-8ca6-4486-9c0e-84733948061c', '27243a6d-68fc-489b-9a3e-3170230b3310', 'Prueba 2');
 
 -- --------------------------------------------------------
 
@@ -103,7 +113,7 @@ CREATE TABLE `Resenas` (
 CREATE TABLE `Roles` (
   `id` char(36) NOT NULL DEFAULT '17e3127c-07fd-4dfd-a71b-8225d07cf96a',
   `nombre` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `Roles`
@@ -127,7 +137,7 @@ CREATE TABLE `Users` (
   `email` varchar(100) NOT NULL,
   `direccion` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `Users`
@@ -147,7 +157,7 @@ CREATE TABLE `Users_roles` (
   `id` int NOT NULL,
   `user_id` char(36) NOT NULL,
   `roles_id` char(36) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `Users_roles`
